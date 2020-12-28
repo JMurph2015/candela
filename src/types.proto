@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package candela;
+
+message LEDStripState {
+    uint32 id = 1;
+    repeated uint32 pixels = 3; 
+}
+
+message ControllerState {
+    repeated LEDStripState strips = 1;
+}
+
+message LEDStripConfig {
+    uint32 id = 1;
+    string name = 2;
+    uint32 length = 3;
+}
+
+message LEDControllerConfig {
+    string name = 1;
+    string ip = 2;
+    uint32 port = 3;
+    repeated LEDStripConfig strips = 4;
+}
