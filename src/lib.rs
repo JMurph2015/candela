@@ -38,8 +38,8 @@ pub trait CandelaServer {
     type Controller: CandelaController;
     fn new<T: CandelaServerConfig>(config: T) -> Result<Self> where Self: Sized;
     fn search() -> Vec<types::LedControllerConfig>;
-    fn get_controllers(&mut self) -> &mut Vec<Self::Controller>;
     fn connect(config: types::LedControllerConfig) -> Result<()>;
+    fn get_controllers(&mut self) -> &mut Vec<Self::Controller>;
 }
 pub trait CandelaController {
     fn get_strips(&mut self) -> &mut Vec<CandelaStrip>;
