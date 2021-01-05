@@ -3,4 +3,4 @@ fn main() -> Result<(), std::io::Error> {
     config.type_attribute(".", "#[derive(Serialize, Deserialize)]");
     config.compile_protos(&["src/types.proto"], &["src/"])?;
     Ok(())
-  }
+}

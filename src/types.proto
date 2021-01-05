@@ -15,11 +15,19 @@ message LEDStripConfig {
     uint32 id = 1;
     string name = 2;
     uint32 length = 3;
+    // Serialized as JSON, used for application specific metadata
+    string extra_data = 4;
 }
 
 message LEDControllerConfig {
     string name = 1;
     string ip = 2;
     uint32 port = 3;
-    repeated LEDStripConfig strips = 4;
+    // Serialized as JSON, used for application specific metadata
+    string extra_data = 4;
+    repeated LEDStripConfig strips = 5;
+}
+
+message ClientMessage {
+    ControllerState full_state = 1;
 }
