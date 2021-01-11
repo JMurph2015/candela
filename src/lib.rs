@@ -1,3 +1,6 @@
+// TODO(murphyj) Remove once this hits MVP
+#![allow(dead_code)]
+
 pub mod types {
     use serde::{Deserialize, Serialize};
     include!(concat!(env!("OUT_DIR"), "/candela.rs"));

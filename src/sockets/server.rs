@@ -6,7 +6,7 @@ pub struct CandelaSocketServer {}
 impl CandelaServer for CandelaSocketServer {
     type Controller = CandelaSocketController;
 
-    fn new<T: CandelaServerConfig>(config: T) -> Result<Self> {
+    fn new<T: CandelaServerConfig>(_config: T) -> Result<Self> {
         unimplemented!()
     }
 
@@ -16,7 +16,7 @@ impl CandelaServer for CandelaSocketServer {
     fn get_controllers(&mut self) -> &mut Vec<Self::Controller> {
         unimplemented!()
     }
-    fn connect(config: types::LedControllerConfig) -> Result<()> {
+    fn connect(_config: types::LedControllerConfig) -> Result<()> {
         unimplemented!()
     }
 }
