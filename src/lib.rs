@@ -7,8 +7,8 @@ mod error;
 mod sockets;
 mod strip;
 
-type Error = error::CandelaError;
-type Result<T> = std::result::Result<T, error::CandelaError>;
+pub type Error = error::CandelaError;
+pub type Result<T> = std::result::Result<T, error::CandelaError>;
 
 pub use strip::CandelaStrip;
 
@@ -26,17 +26,19 @@ pub trait CandelaConfig {
     fn get_setup_port() -> u32;
 }
 
-pub trait CandelaServerConfig: CandelaConfig {
-}
+pub trait CandelaServerConfig: CandelaConfig {}
 
 pub trait CandelaClientConfig: CandelaConfig {
-    fn get_name() -> String;
-    fn get_strip_configs() -> Vec<types::LedStripConfig>;
+    fn get_name(&self) -> String;
+    fn get_setup_port(&self) -> u16;
+    fn get_strip_configs(&self) -> Vec<types::LedStripConfig>;
 }
 
 pub trait CandelaServer {
     type Controller: CandelaController;
-    fn new<T: CandelaServerConfig>(config: T) -> Result<Self> where Self: Sized;
+    fn new<T: CandelaServerConfig>(config: T) -> Result<Self>
+    where
+        Self: Sized;
     fn search() -> Vec<types::LedControllerConfig>;
     fn connect(config: types::LedControllerConfig) -> Result<()>;
     fn get_controllers(&mut self) -> &mut Vec<Self::Controller>;
@@ -46,7 +48,9 @@ pub trait CandelaController {
 }
 
 pub trait CandelaClient {
-    fn new<T: CandelaClientConfig>(config: T) -> Result<Self> where Self: Sized;
-    fn setup() -> Result<()>;
-    fn recv() -> Result<types::ClientMessage>;
+    fn new<T: CandelaClientConfig>(config: T) -> Result<Self>
+    where
+        Self: Sized;
+    fn setup(&mut self) -> Result<()>;
+    fn recv(&mut self) -> Result<types::ClientMessage>;
 }

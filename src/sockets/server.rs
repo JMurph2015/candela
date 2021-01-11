@@ -1,5 +1,5 @@
 use super::CandelaSocketController;
-use crate::{Result, types, CandelaServer, CandelaServerConfig};
+use crate::{types, CandelaServer, CandelaServerConfig, Result};
 
 pub struct CandelaSocketServer {}
 
