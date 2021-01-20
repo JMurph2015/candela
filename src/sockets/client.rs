@@ -26,10 +26,21 @@ impl CandelaClient for CandelaSocketClient {
         });
     }
     fn setup(&mut self) -> Result<()> {
+        // Set up the UDP socket for the initial handshake.
         let addr = Ipv4Addr::new(0, 0, 0, 0);
         let bind_addr = SocketAddr::from((addr, self.setup_port));
         let setup_socket = UdpSocket::bind(bind_addr)?;
         setup_socket.set_broadcast(true)?;
+
+        // Listen for broadcast packet
+
+        // Create controller info message
+
+        // Send controller info message
+
+        // Create ZMQ socket
+
+        // Wait for a bounded amount of time for a ZMQ acknowledgement
 
         unimplemented!()
     }

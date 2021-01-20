@@ -1,5 +1,6 @@
 // TODO(murphyj) Remove once this hits MVP
 #![allow(dead_code)]
+use async_trait::async_trait;
 
 pub mod types {
     use serde::{Deserialize, Serialize};
@@ -7,6 +8,7 @@ pub mod types {
 }
 
 mod error;
+#[cfg(any(feature = "zmq-client", feature = "zmq-server"))]
 mod sockets;
 mod strip;
 
@@ -23,37 +25,43 @@ pub use strip::CandelaStrip;
 pub type Pixel = [u8; 4];
 
 pub trait CandelaConfig {
-    fn get_ips() -> Vec<[u8; 4]>;
-    fn get_subnet() -> [u8; 4];
-    fn get_netmask() -> [u8; 4];
-    fn get_setup_port() -> u32;
+    fn get_ips(&self) -> Vec<[u8; 4]>;
+    fn get_subnet(&self) -> [u8; 4];
+    fn get_netmask(&self) -> [u8; 4];
+    fn get_setup_port(&self) -> u16;
 }
 
 pub trait CandelaServerConfig: CandelaConfig {}
 
 pub trait CandelaClientConfig: CandelaConfig {
     fn get_name(&self) -> String;
-    fn get_setup_port(&self) -> u16;
     fn get_strip_configs(&self) -> Vec<types::LedStripConfig>;
 }
 
+// Handle for the overall setup and control of connections to clients
+#[async_trait]
 pub trait CandelaServer {
     type Controller: CandelaController;
     fn new<T: CandelaServerConfig>(config: T) -> Result<Self>
     where
         Self: Sized;
-    fn search() -> Vec<types::LedControllerConfig>;
-    fn connect(config: types::LedControllerConfig) -> Result<()>;
+    async fn search() -> Vec<types::LedControllerConfig>;
+    async fn connect(config: types::LedControllerConfig) -> Result<()>;
     fn get_controllers(&mut self) -> &mut Vec<Self::Controller>;
 }
+
+// Handle for representing a single controller (aka client) serverside.
+// Most actions are taken against strips which are then synced by syncing the
+// whole controller.
 pub trait CandelaController {
     fn get_strips(&mut self) -> &mut Vec<CandelaStrip>;
 }
 
+#[async_trait]
 pub trait CandelaClient {
     fn new<T: CandelaClientConfig>(config: T) -> Result<Self>
     where
         Self: Sized;
-    fn setup(&mut self) -> Result<()>;
-    fn recv(&mut self) -> Result<types::ClientMessage>;
+    async fn setup(&mut self) -> Result<()>;
+    async fn recv(&mut self) -> Result<types::ClientMessage>;
 }
