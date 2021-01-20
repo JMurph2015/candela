@@ -1,6 +1,6 @@
 [package]
 name = "candela"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Joseph Murphy <air.jmurph@gmail.com>"]
 edition = "2018"
 description = "A library outlining a communication protocol for remote LED control"

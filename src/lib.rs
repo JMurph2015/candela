@@ -40,7 +40,7 @@ pub trait CandelaClientConfig: CandelaConfig {
 
 // Handle for the overall setup and control of connections to clients
 #[async_trait]
-pub trait CandelaServer {
+pub trait CandelaServer: std::fmt::Debug {
     type Controller: CandelaController;
     fn new<T: CandelaServerConfig>(config: T) -> Result<Self>
     where
