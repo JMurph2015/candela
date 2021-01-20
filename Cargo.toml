@@ -21,3 +21,4 @@ prost-build = { version = "0.7" }
 [features]
 default = []
 zmq-client = ["zmq", "mio"]
+zmq-server = ["zmq", "mio"]
