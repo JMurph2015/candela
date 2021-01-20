@@ -7,9 +7,9 @@ pub mod types {
     include!(concat!(env!("OUT_DIR"), "/candela.rs"));
 }
 
-mod error;
+pub mod error;
 #[cfg(any(feature = "zmq-client", feature = "zmq-server"))]
-mod sockets;
+pub mod sockets;
 mod strip;
 
 pub type Error = error::CandelaError;
