@@ -14,22 +14,23 @@ pub struct CandelaStrip {
 
 impl From<CandelaStrip> for types::LedStripState {
     fn from(c: CandelaStrip) -> types::LedStripState {
-        let id = c.id.clone();
+        let id = c.id;
         let pixels = c
             .inner
             .iter()
             .map(|c| -> u32 { u32::from_le_bytes(*c) })
             .collect::<Vec<u32>>();
-        return types::LedStripState {
-            id: id,
-            pixels: pixels,
-        };
+        types::LedStripState { id, pixels }
     }
 }
 
 impl CandelaStrip {
     pub fn len(&self) -> usize {
-        return self.inner.len();
+        self.inner.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.inner.is_empty()
     }
 }
 
@@ -39,7 +40,7 @@ where
 {
     type Output = I::Output;
     fn index(&self, index: I) -> &Self::Output {
-        return &self.inner[index];
+        &self.inner[index]
     }
 }
 
@@ -48,7 +49,7 @@ where
     I: SliceIndex<[Pixel]>,
 {
     fn index_mut(&mut self, index: I) -> &mut Self::Output {
-        return &mut self.inner[index];
+        &mut self.inner[index]
     }
 }
 
