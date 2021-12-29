@@ -1,5 +1,6 @@
 use std::net::{Ipv4Addr, SocketAddr};
 
+use async_trait::async_trait;
 use mio::net::UdpSocket;
 use prost::Message;
 
@@ -13,19 +14,21 @@ pub struct CandelaSocketClient {
     incoming_buf: Vec<u8>,
 }
 
+#[async_trait]
 impl CandelaClient for CandelaSocketClient {
     fn new<T: CandelaClientConfig>(config: T) -> Result<Self> {
         let context = zmq::Context::new();
         let socket = context.socket(zmq::REP)?;
-        return Ok(CandelaSocketClient {
-            context: context,
-            socket: socket,
+        Ok(CandelaSocketClient {
+            context,
+            socket,
             setup_port: config.get_setup_port(),
             outgoing_buf: Vec::<u8>::with_capacity(10000),
-            incoming_buf: Vec::<u8>::with_capacity(1 * 1000 * 1000),
-        });
+            incoming_buf: Vec::<u8>::with_capacity(1000 * 1000),
+        })
     }
-    fn setup(&mut self) -> Result<()> {
+    
+    async fn setup(&mut self) -> Result<()> {
         // Set up the UDP socket for the initial handshake.
         let addr = Ipv4Addr::new(0, 0, 0, 0);
         let bind_addr = SocketAddr::from((addr, self.setup_port));
@@ -44,7 +47,8 @@ impl CandelaClient for CandelaSocketClient {
 
         unimplemented!()
     }
-    fn recv(&mut self) -> Result<types::ClientMessage> {
+
+    async fn recv(&mut self) -> Result<types::ClientMessage> {
         let recv_length = self.socket.recv_into(&mut self.incoming_buf, 0)?;
         return Ok(types::ClientMessage::decode_length_delimited(
             &self.incoming_buf[0..recv_length],
